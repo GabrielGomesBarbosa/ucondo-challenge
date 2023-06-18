@@ -3,7 +3,7 @@ import { Stack } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet, SafeAreaView, Text } from 'react-native'
 
-import { SearchInput } from '../src/components'
+import { SearchInput, AccountList } from '../src/components'
 
 export default function Page() {
   return (
@@ -19,7 +19,11 @@ export default function Page() {
           title: null
         }}
       />
+      
       <SearchInput />
+      
+      <AccountList />
+
     </SafeAreaView>
   )
 }
@@ -28,7 +32,6 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flex: 1,
-    backgroundColor: '#622490',
-    padding: 20
+    backgroundColor: '#622490'
   }
 })

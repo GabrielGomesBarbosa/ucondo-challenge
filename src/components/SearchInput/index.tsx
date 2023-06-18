@@ -3,13 +3,16 @@ import Feather from '@expo/vector-icons/Feather'
 import { StyleSheet, View, TextInput } from 'react-native'
 
 const SearchInput = () => {
-  return <View>
+  return <View style={styles.inputContainer}>
     <Feather name='search' style={styles.icon} />
     <TextInput style={styles.input} />
   </View>
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    margin: 20
+  },
   input: {
     backgroundColor: '#fff', 
     borderRadius: 50, 
