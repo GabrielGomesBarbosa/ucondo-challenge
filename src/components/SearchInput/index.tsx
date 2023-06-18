@@ -5,7 +5,7 @@ import { StyleSheet, View, TextInput } from 'react-native'
 const SearchInput = () => {
   return <View style={styles.inputContainer}>
     <Feather name='search' style={styles.icon} />
-    <TextInput style={styles.input} />
+    <TextInput placeholder='Pesquisar conta' style={styles.input} />
   </View>
 }
 

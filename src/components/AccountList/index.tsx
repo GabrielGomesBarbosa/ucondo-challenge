@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F0EDF5',
     flex: 1,
-    padding: 20,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24
   },
@@ -48,7 +47,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10
   },
   title: {
     fontSize: 24
@@ -57,7 +58,8 @@ const styles = StyleSheet.create({
     color: '#A0A0B2'
   },
   list: {
-    marginTop: 10
+    marginTop: 10,
+    paddingHorizontal: 20
   },
   itemContainer: {
     display: 'flex',
