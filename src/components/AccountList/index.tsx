@@ -22,7 +22,7 @@ const Item = ({ item }: AccountItemProps) => {
 
 
 const AccountList = () => {
-  return <View style={styles.container}>
+  return <>
     <View style={styles.containerTitle}>
       <Text style={styles.title}>Listagem</Text>
       <Text style={styles.titleCount}>27 Registros</Text>
@@ -33,16 +33,10 @@ const AccountList = () => {
       keyExtractor={(item) => item.id}
       style={styles.list}
     />
-  </View>
+  </>
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#F0EDF5',
-    flex: 1,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24
-  },
   containerTitle: {
     display: 'flex',
     flexDirection: 'row',

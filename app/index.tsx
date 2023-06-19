@@ -1,17 +1,20 @@
 import * as React from 'react'
-import { Stack } from 'expo-router'
+import { Stack, useNavigation, useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { StyleSheet, SafeAreaView, Text } from 'react-native'
+import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
-import { SearchInput, AccountList } from '../src/components'
+import { SearchInput, AccountList, BodyCard } from '../src/components'
 
-export default function Page() {
+export default function Account() {
+
+  const router = useRouter()
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen 
         options={{
           headerLeft: () => <Text style={{ color: '#fff', fontSize: 20 }}>Plano de Contas</Text>,
-          headerRight: () => <Ionicons name='add' size={30} color='#fff'/>,
+          headerRight: () => <TouchableOpacity onPress={() => router.push('account/null')}><Ionicons name='add' size={30} color='#fff'/></TouchableOpacity>,
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: '#622490'
@@ -21,9 +24,10 @@ export default function Page() {
       />
       
       <SearchInput />
-      
-      <AccountList />
 
+      <BodyCard>
+        <AccountList />
+      </BodyCard>
     </SafeAreaView>
   )
 }

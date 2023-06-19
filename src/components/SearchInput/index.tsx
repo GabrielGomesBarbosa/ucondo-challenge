@@ -11,7 +11,9 @@ const SearchInput = () => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    margin: 20
+
+    marginVertical: 20,
+    marginHorizontal: 20 
   },
   input: {
     backgroundColor: '#fff', 
