@@ -3,7 +3,6 @@ import { SQLError, SQLResultSet, SQLTransaction } from 'expo-sqlite'
 import db from '../database/connection'
 import Account from '../../types/Account'
 import AccountItem from '../../types/AccountItem'
-import AccountWithChild from '../../types/AccountWithChild'
 
 db.transaction((transaction: SQLTransaction) => {
   transaction.executeSql(`

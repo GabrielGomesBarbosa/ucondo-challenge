@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
+
 import Option from '../../types/Option'
 
 type PickerComponentProps = {

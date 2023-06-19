@@ -5,10 +5,9 @@ import { getStateForKey, useStateX, setStateForKey } from 'react-native-redux'
 import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 
 import Account from '../../src/types/Account'
-import { getCodeString, incrementCode } from '../../src/utils'
 import { formErrorHandler } from '../../src/utils/errorHandler'
-import AccountWithChild from '../../src/types/AccountWithChild'
 import { BodyCard, PickerComponent } from '../../src/components'
+import { getCodeString, incrementCode, validateCode } from '../../src/utils'
 import { create, getLastChild, getById } from '../../src/services/entities/AccountEntity'
 
 type FormErrorMessage = {
@@ -32,7 +31,7 @@ export default function AccountDetail() {
   const save = async (account: Account) => {
     try {
       if(!account.id) {
-        const accountId = await create({
+        await create({
           type: account.type,
           parentId: account.parentId,
           codeUser: account.codeUser,
@@ -40,8 +39,6 @@ export default function AccountDetail() {
           name: account.name,
           release: account.release
         })
-
-        console.log('accountId', accountId)
       }
 
       router.back()
@@ -67,8 +64,26 @@ export default function AccountDetail() {
     router.push('modal')
   }
 
+  const handleCodeChange = (text: string) => {
+    let newValue = ''
+
+    if (text.length > 0) {
+      newValue = text.replaceAll(',', '').replaceAll('-', '')
+    }
+
+    setCode(newValue)
+  }
+
   const submitData = async () => {  
     const parentAccount = getStateForKey('parentAccount')
+
+    const result = validateCode(code)
+
+    if(result.error) {
+      const { field, message } = result
+      setErrorMessages([...errorMessages, { field, message }])
+      return
+    }
 
     const accountData: Account = {
       type: accountType,
@@ -191,12 +206,12 @@ export default function AccountDetail() {
           <View style={styles.formGroup}>
             <Text style={styles.label}>Código:</Text>
             {
-
               id === null ? (
                 <>
                   <TextInput 
                     value={code}
-                    onChangeText={(text) => setCode(text)}
+                    onChangeText={handleCodeChange}
+                    keyboardType='numeric'
                     style={[styles.input, errorMessages.find(item => item.field === 'code') && styles.error]} 
                   />
                   <Text 
