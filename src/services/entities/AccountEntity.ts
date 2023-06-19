@@ -32,7 +32,10 @@ export const create = (account: Account): Promise<number> => {
         }
         else reject(`Error when insert: ${JSON.stringify(account)}`)
       }, (_, error: SQLError) => {
-        reject(error)
+        reject({
+          code: error.code,
+          message: error.message
+        })
         return null
       })
     })

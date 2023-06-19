@@ -6,8 +6,15 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 
 import Account from '../../src/types/Account'
 import { getCodeString, incrementCode } from '../../src/utils'
+import { formErrorHandler } from '../../src/utils/errorHandler'
 import { BodyCard, PickerComponent } from '../../src/components'
 import { create, getLastChild } from '../../src/services/entities/AccountEntity'
+
+
+type FormErrorMessage = {
+  field: string
+  message: string | null
+}
 
 export default function AccountDetail() {
 
@@ -20,6 +27,7 @@ export default function AccountDetail() {
   const [id, setId] = React.useState<string | null>(null)
   const [release, setRelease] = React.useState<string>('0')
   const [accountType, setAccountType] = React.useState<string>('Receita')
+  const [errorMessages, setErrorMessages] = React.useState<FormErrorMessage[]>([])
 
   const save = async (account: Account) => {
     try {
@@ -35,8 +43,16 @@ export default function AccountDetail() {
 
         console.log('accountId', accountId)
       }
+
+      router.back()
     } catch (error) {
-      console.log('error', error)
+      const errorObject = formErrorHandler(error.message)
+
+      console.log('error', errorObject)
+
+      if (errorObject.field === 'code') {
+        setErrorMessages([...errorMessages, { field: errorObject.field, message: errorObject.message }])
+      }
     }
   }
 
@@ -58,7 +74,6 @@ export default function AccountDetail() {
     }
 
     await save(accountData)
-    router.back()
   }
 
   const generateCode = async () => {
@@ -133,7 +148,12 @@ export default function AccountDetail() {
             <TextInput 
               value={code}
               onChangeText={(text) => setCode(text)}
-              style={styles.input} />
+              style={[styles.input, errorMessages.find(item => item.field === 'code') && styles.error]} 
+            />
+            <Text 
+              style={[styles.errorMessage, { display: errorMessages.find(item => item.field === 'code') ? 'flex' : 'none' }]}>
+              {errorMessages.find(item => item.field === 'code')?.message}
+            </Text>
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Nome:</Text>
@@ -203,5 +223,13 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 16,
     paddingHorizontal: 15
+  },
+  error: {
+    borderWidth: 1,
+    borderColor: 'red'
+  },
+  errorMessage: {
+    color: '#FF6680',
+    fontSize: 13
   }
 })
