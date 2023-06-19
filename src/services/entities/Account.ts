@@ -55,3 +55,19 @@ export const getAll = (): Promise<AccountItem[]> => {
     })
   })
 }
+
+export const getAllParent = (): Promise<AccountItem[]> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((transaction: SQLTransaction) => {
+      transaction.executeSql(
+        'SELECT id, codeUser, name, type FROM accounts WHERE parentId IS NULL ORDER BY codeString;',
+        [],
+        (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
+        (_, error: SQLError) => {
+          reject(error)
+          return null
+        }
+      )
+    })
+  })
+}

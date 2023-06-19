@@ -6,33 +6,41 @@ import AccountItem from '../../types/AccountItem'
 
 type AccountItemProps = {
   item: AccountItem
+  allowDelete: boolean
 }
 
-const Item = ({ item }: AccountItemProps) => {
+const Item = ({ item, allowDelete }: AccountItemProps) => {
   return <View style={styles.itemContainer}>
     <TouchableOpacity style={styles.itemText}>
       <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.codeUser} - {item.name}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.itemButton}>
-      <Feather name='trash' size={20} color='#C4C4D1' />
-    </TouchableOpacity>
+    {
+      allowDelete && (
+        <TouchableOpacity style={styles.itemButton}>
+          <Feather name='trash' size={20} color='#C4C4D1' />
+        </TouchableOpacity>
+      )
+    }
   </View>
 }
 
 type AccountListProps = {
+  title: string
   list: AccountItem[]
+  allowDelete?: boolean
 }
 
-const AccountList = ({ list }: AccountListProps) => {
+const AccountList = ({ title, list, allowDelete = true }: AccountListProps) => {
 
   return <>
     <View style={styles.containerTitle}>
-      <Text style={styles.title}>Listagem</Text>
-      <Text style={styles.titleCount}>{list.length} Registros</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.titleCount}>{list.length} Registro(s)</Text>
     </View>
+    
     <FlatList
       data={list}
-      renderItem={({ item }) => <Item key={item.id} item={item} />}
+      renderItem={({ item }) => <Item key={item.id} item={item} allowDelete={allowDelete} />}
       keyExtractor={(item) => item.id.toString()}
       style={styles.list}
     />

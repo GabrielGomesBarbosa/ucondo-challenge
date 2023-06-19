@@ -1,14 +1,17 @@
 import * as React from 'react'
+import { useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
 
 import Picker from '../Picker'
 
 const AccountForm = () => {
+
+  const router = useRouter()
   
+  const [release, setRelease] = React.useState<string>('1')
   const [hasParent, setHasParent] = React.useState<string>('1')
   const [accountType, setAccountType] = React.useState<string>('Receita')
-  const [release, setRelease] = React.useState<string>('1')
   
   return <View style={styles.container}>
     <View style={styles.formGroup}>
@@ -32,7 +35,10 @@ const AccountForm = () => {
       hasParent === '2' && (
         <View style={styles.formGroup}>
           <Text style={styles.label}>Conta pai:</Text>
-          <TouchableOpacity style={styles.dropDownButton}>
+          <TouchableOpacity 
+            onPress={() => router.push('modal')} 
+            style={styles.dropDownButton}
+          >
             <Text>Xubilubi</Text>
             <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
           </TouchableOpacity>

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Stack, useRouter, useNavigation } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { Stack, useRouter, useNavigation } from 'expo-router'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
@@ -40,10 +40,10 @@ export default function AccountPage() {
         }}
       />
       
-      <SearchInput />
+      <SearchInput placeholder='Pesquisar conta' />
 
       <BodyCard>
-        <AccountList list={accountList} />
+        <AccountList title='Listagem' list={accountList} />
       </BodyCard>
     </SafeAreaView>
   )
