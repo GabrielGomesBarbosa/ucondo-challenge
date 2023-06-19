@@ -7,12 +7,17 @@ import AccountItem from '../../types/AccountItem'
 type AccountItemProps = {
   item: AccountItem
   allowDelete: boolean
+  showRelease: boolean
+  getSelectItem: (value: { id: number, value: string }) => void
 }
 
-const Item = ({ item, allowDelete }: AccountItemProps) => {
+const Item = ({ item, allowDelete, getSelectItem, showRelease }: AccountItemProps) => {
   return <View style={styles.itemContainer}>
-    <TouchableOpacity style={styles.itemText}>
+    <TouchableOpacity onPress={() => getSelectItem({ id: item.id, value: `${item.codeUser} - ${item.name}` })} style={styles.itemText}>
       <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.codeUser} - {item.name}</Text>
+      {
+        showRelease && (<Text style={{ fontSize: 10 }}>Lançamento: {item.release ? 'Sim' : 'Não'}</Text>)
+      }
     </TouchableOpacity>
     {
       allowDelete && (
@@ -28,9 +33,11 @@ type AccountListProps = {
   title: string
   list: AccountItem[]
   allowDelete?: boolean
+  showRelease: boolean
+  getSelectItem: (value: { id: number, value: string }) => void
 }
 
-const AccountList = ({ title, list, allowDelete = true }: AccountListProps) => {
+const AccountList = ({ title, list, showRelease = false, allowDelete = true, getSelectItem }: AccountListProps) => {
 
   return <>
     <View style={styles.containerTitle}>
@@ -40,7 +47,7 @@ const AccountList = ({ title, list, allowDelete = true }: AccountListProps) => {
     
     <FlatList
       data={list}
-      renderItem={({ item }) => <Item key={item.id} item={item} allowDelete={allowDelete} />}
+      renderItem={({ item }) => <Item key={item.id} item={item} allowDelete={allowDelete} getSelectItem={getSelectItem} showRelease={showRelease} />}
       keyExtractor={(item) => item.id.toString()}
       style={styles.list}
     />
@@ -80,6 +87,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16
   },
   itemButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 12,
     borderTopRightRadius: 16,
     borderBottomRightRadius: 16

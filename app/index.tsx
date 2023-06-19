@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { setStateForKey  } from 'react-native-redux'
 import { Stack, useRouter, useNavigation } from 'expo-router'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
@@ -26,12 +27,17 @@ export default function AccountPage() {
     return () => unsubscribe()
   }, [navigation])
 
+  const handleNewAccount = () => {
+    setStateForKey('parentAccount', null)
+    router.push('account/null')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen 
         options={{
           headerLeft: () => <Text style={{ color: '#fff', fontSize: 20 }}>Plano de Contas</Text>,
-          headerRight: () => <TouchableOpacity onPress={() => router.push('account/null')}><Ionicons name='add' size={30} color='#fff'/></TouchableOpacity>,
+          headerRight: () => <TouchableOpacity onPress={() => handleNewAccount()}><Ionicons name='add' size={30} color='#fff'/></TouchableOpacity>,
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: '#622490'
@@ -43,7 +49,11 @@ export default function AccountPage() {
       <SearchInput placeholder='Pesquisar conta' />
 
       <BodyCard>
-        <AccountList title='Listagem' list={accountList} />
+        <AccountList 
+          title='Listagem' 
+          list={accountList} 
+          showRelease
+        />
       </BodyCard>
     </SafeAreaView>
   )

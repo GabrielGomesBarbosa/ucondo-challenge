@@ -1,10 +1,11 @@
 type Account = {
   id?: number
+  type: string
+  hasParent: string
   codeString: string
   codeUser: string
   name: string
-  type: string
-  release: number
+  release: string
   parentId: number | null
 }
 

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Stack, useRouter } from 'expo-router'
+import { setStateForKey } from 'react-native-redux'
 import { MaterialIcons, Feather } from '@expo/vector-icons'
 import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
@@ -30,6 +31,11 @@ export default function ModalSearch() {
     }
 
     setSearchTerm(text)
+  }
+
+  const handleGetItem = (item: { id: number, value: string }) => {
+    setStateForKey('parentAccount', item)
+    router.back()
   }
 
   React.useEffect(() => {
@@ -63,7 +69,12 @@ export default function ModalSearch() {
       
       <BodyCard>
         {
-          <AccountList title='Contas pais' list={filteredList} allowDelete={false} />
+          <AccountList 
+            title='Contas pais' 
+            list={filteredList} 
+            allowDelete={false}
+            getSelectItem={({ id, value }) => handleGetItem({ id, value })}
+          />
         }
         <View style={{ position: 'absolute', bottom: 0 }}>
           <Text>Limpar Selecionado e Voltar</Text>
