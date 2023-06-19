@@ -2,6 +2,7 @@ import { SQLError, SQLResultSet, SQLTransaction } from 'expo-sqlite'
 
 import db from '../database/connection'
 import Account from '../../types/Account'
+import AccountItem from '../../types/AccountItem'
 
 db.transaction((transation: SQLTransaction) => {
   transation.executeSql(`
@@ -39,13 +40,13 @@ export const create = (account: Account): Promise<number> => {
   })
 }
 
-export const getAll = (): Promise<Account[]> => {
+export const getAll = (): Promise<AccountItem[]> => {
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
       transaction.executeSql(
-        'SELECT * FROM accounts ORDER BY codeString;',
+        'SELECT id, codeUser, name, type FROM accounts ORDER BY codeString;',
         [],
-        (_, { rows }: SQLResultSet) => resolve(rows._array as Account[]),
+        (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
         (_, error: SQLError) => {
           reject(error)
           return null

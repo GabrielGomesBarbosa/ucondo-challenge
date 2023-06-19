@@ -13,29 +13,29 @@ export default function AccountDetail() {
 
   const [id, setId] = React.useState<string | null>(null)
 
-  const insertAccount = async () => {
-    try {
-      const accountId = await create({
-        codeUser: '1.4',
-        codeString: '001.004',
-        name: 'Juros',
-        type: 'Receita',
-        release: 1,
-        parentId: 1
-      })
+  // const insertAccount = async () => {
+  //   try {
+  //     const accountId = await create({
+  //       codeUser: '1.6',
+  //       codeString: '001.006',
+  //       name: 'Água',
+  //       type: 'Receita',
+  //       release: 1,
+  //       parentId: 1
+  //     })
 
-      console.log('accountId', accountId)
-    } catch (error) {
-      console.log('error', error)
-    }
-  }
+  //     console.log('accountId', accountId)
+  //   } catch (error) {
+  //     console.log('error', error)
+  //   }
+  // }
 
   React.useEffect(() => {
     if (params && params.id !== null) {
       setId(params.id)
     }
 
-    insertAccount()    
+    // insertAccount()    
   }, [params])
 
   return (

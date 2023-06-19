@@ -1,13 +1,30 @@
 import * as React from 'react'
-import { Stack, useRouter } from 'expo-router'
+import { Stack, useRouter, useNavigation } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
+import AccountItem from '../src/types/AccountItem'
+import { getAll } from '../src/services/entities/Account'
 import { SearchInput, AccountList, BodyCard } from '../src/components'
 
-export default function Account() {
+export default function AccountPage() {
 
   const router = useRouter()
+  const navigation = useNavigation()
+
+  const [accountList, setAccountList] = React.useState<AccountItem[]>([])
+
+  const getAccountList = async () => {
+    setAccountList(await getAll())
+  }
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', (e) => {
+      getAccountList()
+    })
+  
+    return () => unsubscribe()
+  }, [navigation])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,7 +43,7 @@ export default function Account() {
       <SearchInput />
 
       <BodyCard>
-        <AccountList />
+        <AccountList list={accountList} />
       </BodyCard>
     </SafeAreaView>
   )
