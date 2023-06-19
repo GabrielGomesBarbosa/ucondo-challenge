@@ -1,7 +1,9 @@
-import Option from './Option'
-
 type GlobalState = {
-  parentAccount: Option | null
+  parentAccount: {
+    id: number
+    code: string
+    label: string
+  }
   loading: boolean
 }
 

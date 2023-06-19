@@ -5,9 +5,9 @@ import { Stack, useSearchParams, useRouter } from 'expo-router'
 import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 
 import Account from '../../src/types/Account'
-import { getCodeString } from '../../src/utils'
-import { create } from '../../src/services/entities/Account'
+import { getCodeString, incrementCode } from '../../src/utils'
 import { BodyCard, PickerComponent } from '../../src/components'
+import { create, getChildren } from '../../src/services/entities/Account'
 
 export default function AccountDetail() {
 
@@ -21,7 +21,6 @@ export default function AccountDetail() {
   const [release, setRelease] = React.useState<string>('1')
   const [hasParent, setHasParent] = React.useState<string>('0')
   const [accountType, setAccountType] = React.useState<string>('Receita')
-  // const [parentAccount, setParentAccount] = React.useState<Option>(null)
 
   const save = async (account: Account) => {
     try {
@@ -63,6 +62,20 @@ export default function AccountDetail() {
     await save(accountData)
     router.back()
   }
+
+  const generateCode = async () => {
+    console.log('selected', parentAccount)
+    const childrenList = await getChildren(parentAccount.id)
+    console.log('chidlrenList', childrenList)
+    const code = incrementCode(parentAccount.code)
+    setCode(code) 
+  }
+
+  React.useEffect(() => {
+    if (parentAccount) {
+      generateCode()
+    }
+  }, [parentAccount])
 
   React.useEffect(() => {
     if (params && params.id !== null) {
@@ -133,7 +146,7 @@ export default function AccountDetail() {
                   onPress={() => handleSelectParentAccount()} 
                   style={styles.dropDownButton}
                 >
-                  <Text>{parentAccount ? parentAccount.value : 'Nenhuma conta selecionada'}</Text>
+                  <Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.value}` : 'Nenhuma conta selecionada'}</Text>
                   <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
                 </TouchableOpacity>
               </View>
@@ -155,7 +168,7 @@ export default function AccountDetail() {
             />
           </View>
           {
-            hasParent === '0' && (
+            hasParent === '1' && (
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Aceita lançamentos:</Text>
                 <PickerComponent 

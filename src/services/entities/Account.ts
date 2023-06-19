@@ -21,6 +21,7 @@ db.transaction((transation: SQLTransaction) => {
 })
 
 export const create = (account: Account): Promise<number> => {
+  console.log('create account', account)
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
       transaction.executeSql(`
@@ -45,8 +46,24 @@ export const getAll = (): Promise<AccountItem[]> => {
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
       transaction.executeSql(
-        'SELECT id, codeUser, name, release type FROM accounts ORDER BY codeString;',
+        'SELECT id, codeUser, name, release, type FROM accounts ORDER BY codeString;',
         [],
+        (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
+        (_, error: SQLError) => {
+          reject(error)
+          return null
+        }
+      )
+    })
+  })
+}
+
+export const getChildren = (parentId: number): Promise<AccountItem[]> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((transaction: SQLTransaction) => {
+      transaction.executeSql(
+        'select * from accounts where parentId = ?;',
+        [parentId],
         (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
         (_, error: SQLError) => {
           reject(error)
@@ -64,6 +81,22 @@ export const getAllParent = (): Promise<AccountItem[]> => {
         'SELECT id, codeUser, name, type FROM accounts WHERE parentId IS NULL ORDER BY codeString;',
         [],
         (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
+        (_, error: SQLError) => {
+          reject(error)
+          return null
+        }
+      )
+    })
+  })
+}
+
+export const remove = (id: number): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((transaction: SQLTransaction) => {
+      transaction.executeSql(
+        'DELETE FROM accounts WHERE id = ?',
+        [id],
+        (_, { rowsAffected }: SQLResultSet) => resolve(rowsAffected),
         (_, error: SQLError) => {
           reject(error)
           return null

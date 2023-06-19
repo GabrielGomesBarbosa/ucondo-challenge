@@ -8,20 +8,25 @@ type AccountItemProps = {
   item: AccountItem
   allowDelete: boolean
   showRelease: boolean
-  getSelectItem: (value: { id: number, value: string }) => void
+  getSelectItem: (value: { id: number, code: string, value: string }) => void
+  deleteItem: (value: { id: number, code: string, value: string }) => void
 }
 
-const Item = ({ item, allowDelete, getSelectItem, showRelease }: AccountItemProps) => {
+const Item = ({ item, allowDelete, getSelectItem, showRelease, deleteItem }: AccountItemProps) => {
   return <View style={styles.itemContainer}>
-    <TouchableOpacity onPress={() => getSelectItem({ id: item.id, value: `${item.codeUser} - ${item.name}` })} style={styles.itemText}>
+    <TouchableOpacity 
+      onPress={() => {
+        getSelectItem({ id: item.id, code: item.codeUser, value: item.name })
+      }} 
+      style={styles.itemText}>
       <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.codeUser} - {item.name}</Text>
       {
-        showRelease && (<Text style={{ fontSize: 10 }}>Lançamento: {item.release ? 'Sim' : 'Não'}</Text>)
+        showRelease && (<Text style={{ fontSize: 10 }}>Lançamento: {item.release === '1' ? 'Sim' : 'Não'}</Text>)
       }
     </TouchableOpacity>
     {
       allowDelete && (
-        <TouchableOpacity style={styles.itemButton}>
+        <TouchableOpacity onPress={() => deleteItem({ id: item.id, code: item.codeUser,  value: item.name })} style={styles.itemButton}>
           <Feather name='trash' size={20} color='#C4C4D1' />
         </TouchableOpacity>
       )
@@ -34,10 +39,11 @@ type AccountListProps = {
   list: AccountItem[]
   allowDelete?: boolean
   showRelease: boolean
-  getSelectItem: (value: { id: number, value: string }) => void
+  getSelectItem?: (value: { id: number, code: string, value: string }) => void
+  deleteItem?: (value: { id: number, code: string, value: string }) => void
 }
 
-const AccountList = ({ title, list, showRelease = false, allowDelete = true, getSelectItem }: AccountListProps) => {
+const AccountList = ({ title, list, showRelease = false, allowDelete = true, getSelectItem, deleteItem }: AccountListProps) => {
 
   return <>
     <View style={styles.containerTitle}>
@@ -47,7 +53,14 @@ const AccountList = ({ title, list, showRelease = false, allowDelete = true, get
     
     <FlatList
       data={list}
-      renderItem={({ item }) => <Item key={item.id} item={item} allowDelete={allowDelete} getSelectItem={getSelectItem} showRelease={showRelease} />}
+      renderItem={({ item }) => <Item 
+        key={item.id} 
+        item={item} 
+        allowDelete={allowDelete} 
+        getSelectItem={getSelectItem} 
+        showRelease={showRelease}
+        deleteItem={deleteItem}
+      />}
       keyExtractor={(item) => item.id.toString()}
       style={styles.list}
     />

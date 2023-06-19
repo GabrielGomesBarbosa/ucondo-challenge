@@ -5,7 +5,7 @@ import { Stack, useRouter, useNavigation } from 'expo-router'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
-import { getAll } from '../src/services/entities/Account'
+import { getAll, remove } from '../src/services/entities/Account'
 import { SearchInput, AccountList, BodyCard } from '../src/components'
 
 export default function AccountPage() {
@@ -32,6 +32,15 @@ export default function AccountPage() {
     router.push('account/null')
   }
 
+  const handleRemove = async ({ id }) => {
+    await remove(id)
+    getAccountList()
+  }
+
+  const handleEdit = async ({ id }) => {
+    console.log('selected id', id)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen 
@@ -53,6 +62,8 @@ export default function AccountPage() {
           title='Listagem' 
           list={accountList} 
           showRelease
+          deleteItem={(value) => handleRemove({ id: value.id })}
+          getSelectItem={(value) => handleEdit({ id: value.id })}
         />
       </BodyCard>
     </SafeAreaView>

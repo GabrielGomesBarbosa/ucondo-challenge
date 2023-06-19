@@ -33,7 +33,8 @@ export default function ModalSearch() {
     setSearchTerm(text)
   }
 
-  const handleGetItem = (item: { id: number, value: string }) => {
+  const handleGetItem = (item: { id: number, code: string, value: string }) => {
+    console.log('item selected', item)
     setStateForKey('parentAccount', item)
     router.back()
   }
@@ -73,7 +74,7 @@ export default function ModalSearch() {
             title='Contas pais' 
             list={filteredList} 
             allowDelete={false}
-            getSelectItem={({ id, value }) => handleGetItem({ id, value })}
+            getSelectItem={({ id, code, value }) => handleGetItem({ id, code, value })}
           />
         }
         <View style={{ position: 'absolute', bottom: 0 }}>

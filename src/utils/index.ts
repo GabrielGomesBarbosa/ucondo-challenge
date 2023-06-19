@@ -12,3 +12,14 @@ export const getCodeString = (code: string) => {
 
   return codeString
 }
+
+export const incrementCode = (code: string) => {
+  const codeSplit: string[] = code.split('.')
+  const lastIndex: number = codeSplit.length - 1
+
+  const incrementValue: number = parseInt(codeSplit[lastIndex]) + 1
+  
+  codeSplit[lastIndex] = incrementValue.toString()
+
+  return codeSplit.join('.')
+}
