@@ -7,7 +7,7 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 import Account from '../../src/types/Account'
 import { getCodeString, incrementCode } from '../../src/utils'
 import { BodyCard, PickerComponent } from '../../src/components'
-import { create, getChildren } from '../../src/services/entities/Account'
+import { create, getLastChild } from '../../src/services/entities/AccountEntity'
 
 export default function AccountDetail() {
 
@@ -62,10 +62,9 @@ export default function AccountDetail() {
   }
 
   const generateCode = async () => {
-    console.log('selected', parentAccount)
-    const childrenList = await getChildren(parentAccount.id)
-    console.log('chidlrenList', childrenList)
-    const code = incrementCode(parentAccount.code)
+    const lastChild = await getLastChild(parentAccount.id)
+    console.log('lastChild', lastChild)
+    const code = incrementCode(parentAccount.code, lastChild)
     setCode(code) 
   }
 

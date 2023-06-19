@@ -21,7 +21,7 @@ const Item = ({ item, allowDelete, getSelectItem, showRelease, deleteItem }: Acc
       style={styles.itemText}>
       <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.codeUser} - {item.name}</Text>
       {
-        showRelease && (<Text style={{ fontSize: 10 }}>Lançamento: {item.release === '1' ? 'Sim' : 'Não'}</Text>)
+        showRelease && (<Text style={{ fontSize: 10 }}>Lançamento: {item.release === 1 ? 'Sim' : 'Não'}</Text>)
       }
     </TouchableOpacity>
     {

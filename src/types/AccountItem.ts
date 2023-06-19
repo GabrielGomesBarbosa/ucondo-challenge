@@ -3,7 +3,7 @@ type AccountItem = {
   codeUser: string
   name: string
   type: string
-  release: string
+  release: number
 }
 
 export default AccountItem

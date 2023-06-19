@@ -1,3 +1,5 @@
+import Account from '../types/Account'
+
 export const getCodeString = (code: string) => {
   const codeSplit = code.split('.')
 
@@ -13,7 +15,7 @@ export const getCodeString = (code: string) => {
   return codeString
 }
 
-export const incrementCode = (code: string) => {
+const incrementLastIndex = (code: string) => {
   const codeSplit: string[] = code.split('.')
   const lastIndex: number = codeSplit.length - 1
 
@@ -22,4 +24,16 @@ export const incrementCode = (code: string) => {
   codeSplit[lastIndex] = incrementValue.toString()
 
   return codeSplit.join('.')
+}
+
+export const incrementCode = (code: string, children: Account | null) => {
+  let newCode = ''
+
+  if (!children) {
+    newCode = `${code}.1`
+  } else {
+    newCode = incrementLastIndex(children.codeUser)
+  }
+
+  return newCode
 }

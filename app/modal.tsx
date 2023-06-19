@@ -6,7 +6,7 @@ import { MaterialIcons, Feather } from '@expo/vector-icons'
 import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
-import { getAllParent } from '../src/services/entities/Account'
+import { getAllParent } from '../src/services/entities/AccountEntity'
 import { SearchInput, BodyCard, AccountList } from '../src/components'
 
 export default function ModalSearch() {

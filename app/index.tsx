@@ -5,7 +5,7 @@ import { Stack, useRouter, useNavigation } from 'expo-router'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
-import { getAll, remove } from '../src/services/entities/Account'
+import { getAll, remove } from '../src/services/entities/AccountEntity'
 import { SearchInput, AccountList, BodyCard } from '../src/components'
 
 export default function AccountPage() {
@@ -16,7 +16,9 @@ export default function AccountPage() {
   const [accountList, setAccountList] = React.useState<AccountItem[]>([])
 
   const getAccountList = async () => {
-    setAccountList(await getAll())
+    const list = await getAll()
+    console.log('list', list)
+    setAccountList(list)
   }
 
   React.useEffect(() => {

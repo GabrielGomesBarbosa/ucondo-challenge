@@ -28,7 +28,6 @@ export const create = (account: Account): Promise<number> => {
       `, [account.type, account.parentId, account.codeUser, account.codeString, account.name, account.release], 
       (_, { rowsAffected, insertId }: SQLResultSet) => {
         if (rowsAffected > 0) {
-          
           resolve(insertId)
         }
         else reject(`Error when insert: ${JSON.stringify(account)}`)
@@ -56,13 +55,13 @@ export const getAll = (): Promise<AccountItem[]> => {
   })
 }
 
-export const getChildren = (parentId: number): Promise<AccountItem[]> => {
+export const getLastChild = (parentId: number): Promise<Account> => {
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
       transaction.executeSql(
-        'select * from accounts where parentId = ?;',
+        'SELECT * FROM accounts WHERE parentId = ? ORDER BY codeString DESC LIMIT 1;',
         [parentId],
-        (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
+        (_, { rows }: SQLResultSet) => resolve(rows.item(0)),
         (_, error: SQLError) => {
           reject(error)
           return null
