@@ -3,8 +3,8 @@ import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Stack, useSearchParams, useRouter } from 'expo-router'
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-native'
 
-import { BodyCard } from '../../src/components'
 import { create } from '../../src/services/entities/Account'
+import { BodyCard, AccountForm } from '../../src/components'
 
 export default function AccountDetail() {
 
@@ -58,7 +58,7 @@ export default function AccountDetail() {
       />
       
       <BodyCard>
-        <Text>Form here...</Text>
+        <AccountForm />
       </BodyCard>
 
     </SafeAreaView>
