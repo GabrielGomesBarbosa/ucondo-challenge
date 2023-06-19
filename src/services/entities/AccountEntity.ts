@@ -78,7 +78,7 @@ export const getAllParent = (type: string): Promise<AccountItem[]> => {
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
       transaction.executeSql(
-        'SELECT id, codeUser, name, type FROM accounts WHERE type = ? ORDER BY codeString;',
+        'SELECT id, codeUser, name, type FROM accounts WHERE type = ? AND release = 0 ORDER BY codeString;',
         [type],
         (_, { rows }: SQLResultSet) => resolve(rows._array as AccountItem[]),
         (_, error: SQLError) => {

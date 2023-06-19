@@ -23,6 +23,7 @@ export default function ModalSearch() {
     setList(resultList)
   }
 
+  // ToDo: refactor
   const filterList = (text: string) => {
     if (text !== '') {
       const results = list.filter(item => item.codeUser.toLowerCase().indexOf(text.toLowerCase()) !== -1 

@@ -13,21 +13,15 @@ export default function AccountPage() {
   const router = useRouter()
   const navigation = useNavigation()
 
-  const [accountList, setAccountList] = React.useState<AccountItem[]>([])
+  const [list, setList] = React.useState<AccountItem[]>([])
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
+  const [filteredList, setFilteredList] = React.useState<AccountItem[]>([])
 
   const getAccountList = async () => {
     const list = await getAll()
     console.log('list', list)
-    setAccountList(list)
+    setList(list)
   }
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', (e) => {
-      getAccountList()
-    })
-  
-    return () => unsubscribe()
-  }, [navigation])
 
   const handleNewAccount = () => {
     setStateForKey('parentAccount', null)
@@ -43,6 +37,30 @@ export default function AccountPage() {
     console.log('selected id', id)
   }
 
+  const filterList = (text: string) => {
+    if (text !== '') {
+      const results = list.filter(item => item.codeUser.toLowerCase().indexOf(text.toLowerCase()) !== -1 
+        || item.name.toLowerCase().indexOf(text.toLowerCase()) !== -1)
+      setFilteredList(results)
+    } else {
+      setFilteredList(list)
+    }
+
+    setSearchTerm(text)
+  }
+
+  React.useEffect(() => {
+    filterList('')
+  }, [list])
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', (e) => {
+      getAccountList()
+    })
+  
+    return () => unsubscribe()
+  }, [navigation])
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen 
@@ -57,12 +75,16 @@ export default function AccountPage() {
         }}
       />
       
-      <SearchInput placeholder='Pesquisar conta' />
+      <SearchInput 
+        searchTerm={searchTerm}
+        setSearchTerm={filterList}
+        placeholder='Pesquisar conta' 
+      />
 
       <BodyCard>
         <AccountList 
           title='Listagem' 
-          list={accountList} 
+          list={filteredList} 
           showRelease
           deleteItem={(value) => handleRemove({ id: value.id })}
           getSelectItem={(value) => handleEdit({ id: value.id })}
