@@ -4,6 +4,7 @@ type GlobalState = {
     code: string
     label: string
   }
+  accountType: 'Receita' | 'Despesa' | null
   loading: boolean
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
-import { getStateForKey, useStateX } from 'react-native-redux'
 import { Stack, useSearchParams, useRouter } from 'expo-router'
+import { getStateForKey, useStateX, setStateForKey } from 'react-native-redux'
 import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 
 import Account from '../../src/types/Account'
@@ -18,8 +18,7 @@ export default function AccountDetail() {
   const [code, setCode] = React.useState<string>('')
   const [name, setName] = React.useState<string>('')
   const [id, setId] = React.useState<string | null>(null)
-  const [release, setRelease] = React.useState<string>('1')
-  const [hasParent, setHasParent] = React.useState<string>('0')
+  const [release, setRelease] = React.useState<string>('0')
   const [accountType, setAccountType] = React.useState<string>('Receita')
 
   const save = async (account: Account) => {
@@ -27,7 +26,6 @@ export default function AccountDetail() {
       if(!account.id) {
         const accountId = await create({
           type: account.type,
-          hasParent: account.hasParent,
           parentId: account.parentId,
           codeUser: account.codeUser,
           codeString: account.codeString,
@@ -43,6 +41,7 @@ export default function AccountDetail() {
   }
 
   const handleSelectParentAccount = () => {
+    setStateForKey('accountType', accountType)
     router.push('modal')
   }
 
@@ -51,12 +50,11 @@ export default function AccountDetail() {
 
     const accountData: Account = {
       type: accountType,
-      hasParent,
-      parentId: hasParent === '1' ? parentAccount.id : null, 
+      parentId: parentAccount ? parentAccount.id : null, 
       codeUser: code,
       codeString: getCodeString(code),
       name,
-      release: hasParent === '0' ? '2' : release 
+      release: parentAccount === '0' ? '2' : release 
     }
 
     await save(accountData)
@@ -122,36 +120,15 @@ export default function AccountDetail() {
             />
           </View>
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Conta pai ou filho:</Text>
-            <PickerComponent 
-              selectedValue={hasParent}
-              setValue={setHasParent}
-              options={[
-                {
-                  value: '0',
-                  label: 'Conta Pai'
-                },
-                {
-                  value: '1',
-                  label: 'Conta Filho'
-                }
-              ]}
-            />
+            <Text style={styles.label}>Conta pai:</Text>
+            <TouchableOpacity 
+              onPress={() => handleSelectParentAccount()} 
+              style={styles.dropDownButton}
+            >
+              <Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.value}` : 'Nenhuma conta selecionada'}</Text>
+              <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
+            </TouchableOpacity>
           </View>
-          {
-            hasParent === '1' && (
-              <View style={styles.formGroup}>
-                <Text style={styles.label}>Conta pai:</Text>
-                <TouchableOpacity 
-                  onPress={() => handleSelectParentAccount()} 
-                  style={styles.dropDownButton}
-                >
-                  <Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.value}` : 'Nenhuma conta selecionada'}</Text>
-                  <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
-                </TouchableOpacity>
-              </View>
-            )
-          }
           <View style={styles.formGroup}>
             <Text style={styles.label}>Código:</Text>
             <TextInput 
@@ -168,7 +145,7 @@ export default function AccountDetail() {
             />
           </View>
           {
-            hasParent === '1' && (
+            parentAccount && (
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Aceita lançamentos:</Text>
                 <PickerComponent 
@@ -176,12 +153,12 @@ export default function AccountDetail() {
                   setValue={setRelease}
                   options={[
                     {
-                      value: '1',
-                      label: 'Sim'
+                      value: '0',
+                      label: 'Não'
                     },
                     {
-                      value: '2',
-                      label: 'Não'
+                      value: '1',
+                      label: 'Sim'
                     }
                   ]}
                 />

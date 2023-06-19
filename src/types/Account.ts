@@ -1,7 +1,6 @@
 type Account = {
   id?: number
   type: string
-  hasParent: string
   codeString: string
   codeUser: string
   name: string

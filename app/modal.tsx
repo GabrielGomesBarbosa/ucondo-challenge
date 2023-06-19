@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useStateX } from 'react-native-redux'
 import { Stack, useRouter } from 'expo-router'
 import { setStateForKey } from 'react-native-redux'
 import { MaterialIcons, Feather } from '@expo/vector-icons'
@@ -11,13 +12,14 @@ import { SearchInput, BodyCard, AccountList } from '../src/components'
 export default function ModalSearch() {
 
   const router = useRouter()
+  const accountType = useStateX('accountType')
 
   const [list, setList] = React.useState<AccountItem[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>('')
   const [filteredList, setFilteredList] = React.useState<AccountItem[]>([])
 
   const getList = async () => {
-    const resultList = await getAllParent()
+    const resultList = await getAllParent(accountType)
     setList(resultList)
   }
 
@@ -49,7 +51,6 @@ export default function ModalSearch() {
 
   return (
     <SafeAreaView style={styles.container}>
-     
       <Stack.Screen 
         options={{
           headerLeft: () =>  <Text style={{ color: '#fff', fontSize: 20 }}>Buscar conta pai</Text>,
@@ -74,6 +75,7 @@ export default function ModalSearch() {
             title='Contas pais' 
             list={filteredList} 
             allowDelete={false}
+            showRelease={false}
             getSelectItem={({ id, code, value }) => handleGetItem({ id, code, value })}
           />
         }
