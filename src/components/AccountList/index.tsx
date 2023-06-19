@@ -4,6 +4,8 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native
 
 import { accountList } from '../../constants'
 import AccountItem from '../../types/AccountItem'
+import { getAll } from '../../services/entities/Account'
+import Account from '../../types/Account'
 
 type AccountItemProps = {
   item: AccountItem
@@ -12,7 +14,7 @@ type AccountItemProps = {
 const Item = ({ item }: AccountItemProps) => {
   return <View style={styles.itemContainer}>
     <TouchableOpacity style={styles.itemText}>
-      <Text style={{ color: item.type === 'credit' ? '#1BA803' : '#E28856' }}>{item.name}</Text>
+      <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.name}</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.itemButton}>
       <Feather name='trash' size={20} color='#C4C4D1' />
@@ -22,6 +24,18 @@ const Item = ({ item }: AccountItemProps) => {
 
 
 const AccountList = () => {
+
+  const [accountList, setAccountList] = React.useState<Account[]>([])
+
+  const getList = async () => {
+    const resultList = await getAll()
+    setAccountList(resultList)
+  }
+
+  React.useEffect(() => {
+    getList()
+  }, [])
+
   return <>
     <View style={styles.containerTitle}>
       <Text style={styles.title}>Listagem</Text>
@@ -29,8 +43,8 @@ const AccountList = () => {
     </View>
     <FlatList
       data={accountList}
-      renderItem={({ item }) => <Item key={item.id} item={item} />}
-      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <Item key={item.id} item={{ id: item.id!, name: item.name, type: item.type }} />}
+      keyExtractor={(item) => item.id.toString()}
       style={styles.list}
     />
   </>

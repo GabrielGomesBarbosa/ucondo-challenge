@@ -4,6 +4,7 @@ import { Stack, useSearchParams, useRouter } from 'expo-router'
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-native'
 
 import { BodyCard } from '../../src/components'
+import { create } from '../../src/services/entities/Account'
 
 export default function AccountDetail() {
 
@@ -12,12 +13,30 @@ export default function AccountDetail() {
 
   const [id, setId] = React.useState<string | null>(null)
 
+  const insertAccount = async () => {
+    try {
+      const accountId = await create({
+        codeUser: '1.4',
+        codeString: '001.004',
+        name: 'Juros',
+        type: 'Receita',
+        release: 1,
+        parentId: 1
+      })
+
+      console.log('accountId', accountId)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
   React.useEffect(() => {
     if (params && params.id !== null) {
       setId(params.id)
     }
-  }, [params])
 
+    insertAccount()    
+  }, [params])
 
   return (
     <SafeAreaView style={styles.container}>

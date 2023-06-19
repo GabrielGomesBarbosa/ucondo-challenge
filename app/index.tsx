@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Stack, useNavigation, useRouter } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
