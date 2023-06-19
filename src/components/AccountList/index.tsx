@@ -8,15 +8,15 @@ type AccountItemProps = {
   item: AccountItem
   allowDelete: boolean
   showRelease: boolean
-  getSelectItem: (value: { id: number, code: string, value: string }) => void
-  deleteItem: (value: { id: number, code: string, value: string }) => void
+  getSelectItem: (value: { id: number, code: string, label: string }) => void
+  deleteItem: (value: { id: number, code: string, label: string }) => void
 }
 
 const Item = ({ item, allowDelete, getSelectItem, showRelease, deleteItem }: AccountItemProps) => {
   return <View style={styles.itemContainer}>
     <TouchableOpacity 
       onPress={() => {
-        getSelectItem({ id: item.id, code: item.codeUser, value: item.name })
+        getSelectItem({ id: item.id, code: item.codeUser, label: item.name })
       }} 
       style={styles.itemText}>
       <Text style={{ color: item.type === 'Receita' ? '#1BA803' : '#E28856' }}>{item.codeUser} - {item.name}</Text>
@@ -26,7 +26,7 @@ const Item = ({ item, allowDelete, getSelectItem, showRelease, deleteItem }: Acc
     </TouchableOpacity>
     {
       allowDelete && (
-        <TouchableOpacity onPress={() => deleteItem({ id: item.id, code: item.codeUser,  value: item.name })} style={styles.itemButton}>
+        <TouchableOpacity onPress={() => deleteItem({ id: item.id, code: item.codeUser, label: item.name })} style={styles.itemButton}>
           <Feather name='trash' size={20} color='#C4C4D1' />
         </TouchableOpacity>
       )
@@ -39,8 +39,8 @@ type AccountListProps = {
   list: AccountItem[]
   allowDelete?: boolean
   showRelease: boolean
-  getSelectItem?: (value: { id: number, code: string, value: string }) => void
-  deleteItem?: (value: { id: number, code: string, value: string }) => void
+  getSelectItem?: (value: { id: number, code: string, label: string }) => void
+  deleteItem?: (value: { id: number, code: string, label: string }) => void
 }
 
 const AccountList = ({ title, list, showRelease = false, allowDelete = true, getSelectItem, deleteItem }: AccountListProps) => {

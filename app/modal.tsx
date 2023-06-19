@@ -36,7 +36,7 @@ export default function ModalSearch() {
     setSearchTerm(text)
   }
 
-  const handleGetItem = (item: { id: number, code: string, value: string }) => {
+  const handleGetItem = (item: { id: number, code: string, label: string }) => {
     console.log('item selected', item)
     setStateForKey('parentAccount', item)
     router.back()
@@ -77,7 +77,7 @@ export default function ModalSearch() {
             list={filteredList} 
             allowDelete={false}
             showRelease={false}
-            getSelectItem={({ id, code, value }) => handleGetItem({ id, code, value })}
+            getSelectItem={({ id, code, label }) => handleGetItem({ id, code, label })}
           />
         }
         <View style={{ position: 'absolute', bottom: 0 }}>

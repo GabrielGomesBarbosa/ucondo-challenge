@@ -7,9 +7,9 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 import Account from '../../src/types/Account'
 import { getCodeString, incrementCode } from '../../src/utils'
 import { formErrorHandler } from '../../src/utils/errorHandler'
+import AccountWithChild from '../../src/types/AccountWithChild'
 import { BodyCard, PickerComponent } from '../../src/components'
-import { create, getLastChild } from '../../src/services/entities/AccountEntity'
-
+import { create, getLastChild, getById } from '../../src/services/entities/AccountEntity'
 
 type FormErrorMessage = {
   field: string
@@ -24,7 +24,7 @@ export default function AccountDetail() {
 
   const [code, setCode] = React.useState<string>('')
   const [name, setName] = React.useState<string>('')
-  const [id, setId] = React.useState<string | null>(null)
+  const [id, setId] = React.useState<number | null>(null)
   const [release, setRelease] = React.useState<string>('0')
   const [accountType, setAccountType] = React.useState<string>('Receita')
   const [errorMessages, setErrorMessages] = React.useState<FormErrorMessage[]>([])
@@ -89,15 +89,42 @@ export default function AccountDetail() {
     setCode(code) 
   }
 
+  const loadParentAccount = async (parentId: number) => {
+    const parentAccount: Account | null = await getById(parentId)
+    console.log('parentAccount', parentAccount)
+    setStateForKey('parentAccount', {
+      id: parentAccount.id,
+      code: parentAccount.codeUser,
+      label: parentAccount.name
+    })
+  }
+
+  const loadAccount = async (id: number) => {
+    const accountItem: Account | null = await getById(id)
+
+    if(accountItem) {
+      const { parentId } = accountItem
+
+      if(parentId)
+        loadParentAccount(parentId)
+
+      setId(accountItem.id)
+      setAccountType(accountItem.type)
+      setCode(accountItem.codeUser)
+      setName(accountItem.name)
+    }
+  }
+
   React.useEffect(() => {
-    if (parentAccount) {
+    console.log('parentAccount', parentAccount)
+    if (id === null && parentAccount) {
       generateCode()
     }
   }, [parentAccount])
 
   React.useEffect(() => {
     if (params && params.id !== null) {
-      setId(params.id)
+      loadAccount(parseInt(params.id))
     }
   }, [params])
 
@@ -109,9 +136,9 @@ export default function AccountDetail() {
             <TouchableOpacity onPress={() => router.back()}>
               <MaterialIcons name='arrow-back-ios' color='#fff' size={20} style={{ marginEnd: 10 }}/>
             </TouchableOpacity>
-            <Text style={{ color: '#fff', fontSize: 20 }}>{id !== 'null' ? 'Editar' : 'Inserir'} Conta</Text>
+            <Text style={{ color: '#fff', fontSize: 20 }}>{id !== null ? 'Editar' : 'Inserir'} Conta</Text>
           </View>,
-          headerRight: () => <TouchableOpacity onPress={() => submitData()}><Feather name='check' size={30} color='#fff'/></TouchableOpacity>,
+          headerRight: () => id === null ? <TouchableOpacity onPress={() => submitData()}><Feather name='check' size={30} color='#fff'/></TouchableOpacity> : null,
           headerShadowVisible: false,
           headerStyle: {
             backgroundColor: '#622490'
@@ -119,74 +146,100 @@ export default function AccountDetail() {
           title: null
         }}
       />
-      
       <BodyCard>
         <View style={styles.containerForm}>
+          {
+            id !== null && <View style={styles.warningCard}>
+              <Text>
+                Não é possivel alterar as informações cadastradas
+              </Text>
+            </View>
+          }
           <View style={styles.formGroup}>
             <Text style={styles.label}>Tipo:</Text>
-            <PickerComponent 
-              selectedValue={accountType}
-              setValue={handleAccountType}
-              options={[
-                {
-                  value: 'Receita',
-                  label: 'Receita'
-                },
-                {
-                  value: 'Despesa',
-                  label: 'Despesa'
-                }
-              ]}
-            />
+            {
+              id === null ?  <PickerComponent 
+                selectedValue={accountType}
+                setValue={handleAccountType}
+                enabled={!!id}
+                options={[
+                  {
+                    value: 'Receita',
+                    label: 'Receita'
+                  },
+                  {
+                    value: 'Despesa',
+                    label: 'Despesa'
+                  }
+                ]}
+              /> : <Text>{accountType}</Text>
+            }
+            
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Conta pai:</Text>
-            <TouchableOpacity 
-              onPress={() => handleSelectParentAccount()} 
-              style={styles.dropDownButton}
-            >
-              <Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.value}` : 'Nenhuma conta selecionada'}</Text>
-              <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
-            </TouchableOpacity>
+            {
+              id === null ? (<TouchableOpacity 
+                onPress={() => handleSelectParentAccount()} 
+                style={styles.dropDownButton}
+              >
+                <Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.label}` : 'Nenhuma conta pai selecionada'}</Text>
+                <MaterialIcons name='arrow-drop-down' color='#747474' size={24}/>
+              </TouchableOpacity>) : (<Text>{parentAccount ? `${parentAccount.code} - ${parentAccount.label}` : 'Nenhuma conta pai selecionada'}</Text>)
+            }
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Código:</Text>
-            <TextInput 
-              value={code}
-              onChangeText={(text) => setCode(text)}
-              style={[styles.input, errorMessages.find(item => item.field === 'code') && styles.error]} 
-            />
-            <Text 
-              style={[styles.errorMessage, { display: errorMessages.find(item => item.field === 'code') ? 'flex' : 'none' }]}>
-              {errorMessages.find(item => item.field === 'code')?.message}
-            </Text>
+            {
+
+              id === null ? (
+                <>
+                  <TextInput 
+                    value={code}
+                    onChangeText={(text) => setCode(text)}
+                    style={[styles.input, errorMessages.find(item => item.field === 'code') && styles.error]} 
+                  />
+                  <Text 
+                    style={[styles.errorMessage, { display: errorMessages.find(item => item.field === 'code') ? 'flex' : 'none' }]}>
+                    {errorMessages.find(item => item.field === 'code')?.message}
+                  </Text>
+                </>
+              ) : (
+                <Text>{code}</Text>
+              )
+            }
           </View>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Nome:</Text>
-            <TextInput 
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={styles.input} 
-            />
+            {
+              id === null ? <TextInput 
+                value={name}
+                onChangeText={(text) => setName(text)}
+                style={styles.input} 
+              /> : <Text>{name}</Text>
+            }
           </View>
           {
             parentAccount && (
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Aceita lançamentos:</Text>
-                <PickerComponent 
-                  selectedValue={release}
-                  setValue={setRelease}
-                  options={[
-                    {
-                      value: '0',
-                      label: 'Não'
-                    },
-                    {
-                      value: '1',
-                      label: 'Sim'
-                    }
-                  ]}
-                />
+                {
+                  id === null ? <PickerComponent 
+                    selectedValue={release}
+                    setValue={setRelease}
+                    options={[
+                      {
+                        value: '0',
+                        label: 'Não'
+                      },
+                      {
+                        value: '1',
+                        label: 'Sim'
+                      }
+                    ]}
+                  /> : <Text>{release ? 'Sim' : 'Não'}</Text>
+                }
+                
               </View>
             )
           }
@@ -202,6 +255,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     backgroundColor: '#622490'
+  },
+  warningCard: {
+    backgroundColor: 'orange',
+    padding: 10,
+    borderRadius: 16,
+    marginBottom: 10
   },
   containerForm: {
     padding: 20

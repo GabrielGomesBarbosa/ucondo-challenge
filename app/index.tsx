@@ -34,7 +34,8 @@ export default function AccountPage() {
   }
 
   const handleEdit = async ({ id }) => {
-    console.log('selected id', id)
+    setStateForKey('parentAccount', null)
+    router.push(`account/${id}`)
   }
 
   const filterList = (text: string) => {
