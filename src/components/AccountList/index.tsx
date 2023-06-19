@@ -28,7 +28,7 @@ const AccountList = ({ list }: AccountListProps) => {
   return <>
     <View style={styles.containerTitle}>
       <Text style={styles.title}>Listagem</Text>
-      <Text style={styles.titleCount}>27 Registros</Text>
+      <Text style={styles.titleCount}>{list.length} Registros</Text>
     </View>
     <FlatList
       data={list}
