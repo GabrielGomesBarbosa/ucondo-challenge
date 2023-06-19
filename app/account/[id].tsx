@@ -56,6 +56,12 @@ export default function AccountDetail() {
     }
   }
 
+  const handleAccountType = (text: string) => {
+    setStateForKey('parentAccount', null)
+    setCode(null)
+    setAccountType(text)
+  }
+
   const handleSelectParentAccount = () => {
     setStateForKey('accountType', accountType)
     router.push('modal')
@@ -120,7 +126,7 @@ export default function AccountDetail() {
             <Text style={styles.label}>Tipo:</Text>
             <PickerComponent 
               selectedValue={accountType}
-              setValue={setAccountType}
+              setValue={handleAccountType}
               options={[
                 {
                   value: 'Receita',
