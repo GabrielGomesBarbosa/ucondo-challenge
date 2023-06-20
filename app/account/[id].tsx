@@ -7,8 +7,8 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 import Account from '../../src/types/Account'
 import { formErrorHandler } from '../../src/utils/errorHandler'
 import { BodyCard, PickerComponent } from '../../src/components'
-import { generateCodeString, incrementCode, validateCode } from '../../src/utils'
-import { create, getLastChild, getById } from '../../src/services/entities/AccountEntity'
+import { create, getLastChild, getById } from '../../src/entities/Account'
+import { generateCodeString, incrementCode, validateCode } from '../../src/services/account'
 
 type FormErrorMessage = {
   field: string
@@ -45,10 +45,8 @@ export default function AccountDetail() {
     } catch (error) {
       const errorObject = formErrorHandler(error.message)
 
-      console.log('error', errorObject)
-
       if (errorObject.field === 'code') {
-        setErrorMessages([...errorMessages, { field: errorObject.field, message: errorObject.message }])
+        setErrorMessages([{ field: errorObject.field, message: errorObject.message }])
       }
     }
   }
@@ -74,16 +72,35 @@ export default function AccountDetail() {
     setCode(newValue)
   }
 
-  const submitData = async () => {  
-    const parentAccount = getStateForKey('parentAccount')
+  const hasErrors = async () => {
+    setErrorMessages([])
 
-    const result = validateCode(code)
+    const errors = []
+
+    if(!name) {
+      errors.push({ field: 'name', message: 'Campo obrigatório' })
+    }
+
+    const result = await validateCode(code)
 
     if(result.error) {
       const { field, message } = result
-      setErrorMessages([...errorMessages, { field, message }])
-      return
+      errors.push({ field, message })
     }
+
+    const hasErrors = errors.length > 0
+
+    if (hasErrors)
+      setErrorMessages(errors)
+
+    return hasErrors
+  }
+
+  const submitData = async () => {  
+    const parentAccount = getStateForKey('parentAccount')
+    
+    if(hasErrors())
+      return
 
     const accountData: Account = {
       type: accountType,
@@ -99,14 +116,12 @@ export default function AccountDetail() {
 
   const generateCode = async () => {
     const lastChild = await getLastChild(parentAccount.id)
-    console.log('lastChild', lastChild)
     const code = incrementCode(parentAccount.code, lastChild)
     setCode(code) 
   }
 
   const loadParentAccount = async (parentId: number) => {
     const parentAccount: Account | null = await getById(parentId)
-    console.log('parentAccount', parentAccount)
     setStateForKey('parentAccount', {
       id: parentAccount.id,
       code: parentAccount.codeUser,
@@ -131,7 +146,6 @@ export default function AccountDetail() {
   }
 
   React.useEffect(() => {
-    console.log('parentAccount', parentAccount)
     if (id === null && parentAccount) {
       generateCode()
     }
@@ -227,11 +241,19 @@ export default function AccountDetail() {
           <View style={styles.formGroup}>
             <Text style={styles.label}>Nome:</Text>
             {
-              id === null ? <TextInput 
-                value={name}
-                onChangeText={(text) => setName(text)}
-                style={styles.input} 
-              /> : <Text>{name}</Text>
+              id === null ? 
+                <>
+                  <TextInput 
+                    value={name}
+                    onChangeText={(text) => setName(text)}
+                    style={[styles.input, errorMessages.find(item => item.field === 'name') && styles.error]} 
+                  /> 
+                  <Text 
+                    style={[styles.errorMessage, { display: errorMessages.find(item => item.field === 'name') ? 'flex' : 'none' }]}>
+                    {errorMessages.find(item => item.field === 'name')?.message}
+                  </Text>
+                </>
+                : <Text>{name}</Text>
             }
           </View>
           {

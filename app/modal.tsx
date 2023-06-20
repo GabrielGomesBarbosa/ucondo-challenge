@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
-import { getAllParent } from '../src/services/entities/AccountEntity'
+import { getAllParent } from '../src/entities/Account'
 import { SearchInput, BodyCard, AccountList } from '../src/components'
 
 export default function ModalSearch() {
@@ -37,7 +37,6 @@ export default function ModalSearch() {
   }
 
   const handleGetItem = (item: { id: number, code: string, label: string }) => {
-    console.log('item selected', item)
     setStateForKey('parentAccount', item)
     router.back()
   }

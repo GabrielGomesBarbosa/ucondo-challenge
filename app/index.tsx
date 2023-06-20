@@ -5,7 +5,7 @@ import { Stack, useRouter, useNavigation } from 'expo-router'
 import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
-import { getAll, remove } from '../src/services/entities/AccountEntity'
+import { getAll, remove } from '../src/entities/Account'
 import { SearchInput, AccountList, BodyCard } from '../src/components'
 
 export default function AccountPage() {
@@ -19,7 +19,6 @@ export default function AccountPage() {
 
   const getAccountList = async () => {
     const list = await getAll()
-    console.log('list', list)
     setList(list)
   }
 

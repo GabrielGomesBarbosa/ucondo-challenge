@@ -1,4 +1,43 @@
-import Account from '../types/Account'
+import Account from '../../types/Account'
+import { getByCode } from '../../entities/Account'
+
+export const validateCode = async (code: string) => {
+
+  if (code === '')
+    return {
+      error: true,
+      field: 'code',
+      message: 'Campo obrigatório'
+    }
+
+  const splitCodes = code.split('.')
+
+  const errors = splitCodes.filter(item => item.length > 3)
+
+  if (errors.length > 0)
+    return {
+      error: true,
+      field: 'code',
+      message: 'Os códigos não podem conter mais que 3 dígitos por separação'
+    }
+
+  const codeString = generateCodeString(code)
+
+  const item = await getByCode(codeString)
+
+  console.log('item', item)
+
+  if (item)
+    return {
+      error: true,
+      field: 'code',
+      message: 'Este código já existe, por favor escolha outro'
+    }
+
+  return {
+    error: false
+  }
+}
 
 export const generateCodeString = (code: string) => {
   const codeSplit = code.split('.')
@@ -32,23 +71,6 @@ const incrementCodeRecursion = (version) => {
   const incrementedWithoutLastPart = incrementCodeRecursion(withoutLastPart)
 
   return incrementedWithoutLastPart
-}
-
-export const validateCode = (code: string) => {
-  const splitCodes = code.split('.')
-
-  const errors = splitCodes.filter(item => item.length > 3)
-
-  if(errors.length > 0)
-    return {
-      error: true,
-      field: 'code',
-      message: 'Os códigos não podem conter mais que 3 dígitos por separação'
-    }
-
-  return {
-    error: false
-  }
 }
 
 export const incrementCode = (code: string, children: Account | null) => {
