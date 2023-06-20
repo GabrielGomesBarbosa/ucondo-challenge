@@ -1,14 +1,13 @@
-# Expo Router Example
+# UCondo App Challenge
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+The goal of this project is manage chart of accounts, this is a React Native project
 
-## 🚀 How to use
+## Expo
 
-```sh
-npx create-expo-app -e with-router
+To run this project in necessary have Expo installed on machine and a Android emulator, open Android emulator and then access the project root folder in terminal and run
+
+```
+npm start
 ```
 
-## 📝 Notes
-
-- [Expo Router: Docs](https://expo.github.io/router)
-- [Expo Router: Repo](https://github.com/expo/router)
+And after QR Code is open press `a` to open on Android.

@@ -31,6 +31,9 @@
       "eas": {
         "projectId": "e3edceaf-a633-45cd-a6c4-3b49dcb72664"
       }
+    },
+    "android": {
+      "package": "com.gabrielgomesbarbosa.ucondochallenge"
     }
   }
 }
