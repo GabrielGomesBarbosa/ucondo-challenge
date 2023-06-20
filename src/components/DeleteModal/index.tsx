@@ -26,7 +26,7 @@ const DeleteModal = ({ visible, itemText, setVisible, confirmEvent }: DeleteModa
               <Text style={styles.textValue}>{itemText}</Text>
               <Text>?</Text>
             </View>
-            <Text style={styles.textWarning}>Atenção! Ao remover uma conta pai, todas a filhas serão removidas também.</Text>
+            <Text style={styles.textWarning}>Atenção! Ao remover uma conta pai, todas a filhas serão removidos também.</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity 
