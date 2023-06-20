@@ -7,7 +7,7 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 import Account from '../../src/types/Account'
 import { formErrorHandler } from '../../src/utils/errorHandler'
 import { BodyCard, PickerComponent } from '../../src/components'
-import { create, getLastChild, getById } from '../../src/entities/Account'
+import { create, getLastChild, getById, getLastParent } from '../../src/entities/Account'
 import { generateCodeString, incrementCode, validateCode } from '../../src/services/account'
 
 type FormErrorMessage = {
@@ -115,6 +115,15 @@ export default function AccountDetail() {
     await save(accountData)
   }
 
+  const getLastParentCode = async () => {
+    const lastParent = await getLastParent()
+
+    if (lastParent) {
+      const newCode = parseInt(lastParent.codeUser) + 1
+      setCode(newCode.toString())
+    }
+  }
+
   const generateCode = async () => {
     const lastChild = await getLastChild(parentAccount.id)
     const code = incrementCode(parentAccount.code, lastChild)
@@ -153,9 +162,12 @@ export default function AccountDetail() {
   }, [parentAccount])
 
   React.useEffect(() => {
-    if (params && params.id !== null) {
+    if (params && params.id !== null)
       loadAccount(parseInt(params.id))
-    }
+
+    if(params && params.id === 'null' && !parentAccount)
+      getLastParentCode()
+    
   }, [params])
 
   return (

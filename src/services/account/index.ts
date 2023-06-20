@@ -72,8 +72,7 @@ const incrementCodeRecursion = (version) => {
 }
 
 export const incrementCode = (code: string, children: Account | null) => {
-  const newCode = !children ? parseInt(code).toFixed(2) : children.codeUser
-
+  const newCode = !children ? `${code}.0` : children.codeUser
 
   const incrementRecursion = incrementCodeRecursion(newCode)
   const resultCode = incrementRecursion.split('.').filter(item => item !== '0').join('.')

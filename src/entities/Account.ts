@@ -107,6 +107,22 @@ export const getLastChild = (parentId: number): Promise<Account> => {
   })
 }
 
+export const getLastParent = (): Promise<Account> => {
+  return new Promise((resolve, reject) => {
+    db.transaction((transaction: SQLTransaction) => {
+      transaction.executeSql(
+        'SELECT * FROM accounts WHERE parentId IS NULL ORDER BY codeString DESC LIMIT 1;',
+        [],
+        (_, { rows }: SQLResultSet) => resolve(rows.item(0)),
+        (_, error: SQLError) => {
+          reject(error)
+          return null
+        }
+      )
+    })
+  })
+}
+
 export const getAllParent = (type: string): Promise<AccountItem[]> => {
   return new Promise((resolve, reject) => {
     db.transaction((transaction: SQLTransaction) => {
