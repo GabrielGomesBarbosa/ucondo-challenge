@@ -2,8 +2,8 @@ import * as React from 'react'
 import { useStateX } from 'react-native-redux'
 import { Stack, useRouter } from 'expo-router'
 import { setStateForKey } from 'react-native-redux'
-import { MaterialIcons, Feather } from '@expo/vector-icons'
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
 import { getAllParent } from '../src/services/entities/AccountEntity'
@@ -80,13 +80,6 @@ export default function ModalSearch() {
             getSelectItem={({ id, code, label }) => handleGetItem({ id, code, label })}
           />
         }
-        <View style={{ position: 'absolute', bottom: 0 }}>
-          <Text>Limpar Selecionado e Voltar</Text>
-          <TouchableOpacity>
-            <Feather name='trash' size={20} color='#FF6680' />
-          </TouchableOpacity>
-
-        </View>
       </BodyCard>
       
     </SafeAreaView>

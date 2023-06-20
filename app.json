@@ -1,10 +1,36 @@
 {
   "expo": {
     "scheme": "acme",
+    "build": {
+      "development": {
+        "developmentClient": true,
+        "distribution": "internal"
+      },
+      "preview": {
+        "android": {
+          "buildType": "apk"
+        },
+        "distribution": "internal"
+      },
+      "preview2": {
+        "android": {
+          "gradleCommand": ":app:assembleRelease"
+        }
+      },
+      "preview3": {
+        "developmentClient": true
+      },
+      "production": {}
+    },
     "web": {
       "bundler": "metro"
     },
     "name": "ucondo-challenge",
-    "slug": "ucondo-challenge"
+    "slug": "ucondo-challenge",
+    "extra": {
+      "eas": {
+        "projectId": "e3edceaf-a633-45cd-a6c4-3b49dcb72664"
+      }
+    }
   }
 }

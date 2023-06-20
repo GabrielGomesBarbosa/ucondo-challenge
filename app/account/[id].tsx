@@ -7,7 +7,7 @@ import { StyleSheet, SafeAreaView, View, Text, TextInput, TouchableOpacity } fro
 import Account from '../../src/types/Account'
 import { formErrorHandler } from '../../src/utils/errorHandler'
 import { BodyCard, PickerComponent } from '../../src/components'
-import { getCodeString, incrementCode, validateCode } from '../../src/utils'
+import { generateCodeString, incrementCode, validateCode } from '../../src/utils'
 import { create, getLastChild, getById } from '../../src/services/entities/AccountEntity'
 
 type FormErrorMessage = {
@@ -89,7 +89,7 @@ export default function AccountDetail() {
       type: accountType,
       parentId: parentAccount ? parentAccount.id : null, 
       codeUser: code,
-      codeString: getCodeString(code),
+      codeString: generateCodeString(code),
       name,
       release: parentAccount === '0' ? '2' : release 
     }
@@ -151,7 +151,7 @@ export default function AccountDetail() {
             <TouchableOpacity onPress={() => router.back()}>
               <MaterialIcons name='arrow-back-ios' color='#fff' size={20} style={{ marginEnd: 10 }}/>
             </TouchableOpacity>
-            <Text style={{ color: '#fff', fontSize: 20 }}>{id !== null ? 'Editar' : 'Inserir'} Conta</Text>
+            <Text style={{ color: '#fff', fontSize: 20 }}>{id !== null ? 'Visualisar' : 'Inserir'} Conta</Text>
           </View>,
           headerRight: () => id === null ? <TouchableOpacity onPress={() => submitData()}><Feather name='check' size={30} color='#fff'/></TouchableOpacity> : null,
           headerShadowVisible: false,

@@ -1,6 +1,6 @@
 import Account from '../types/Account'
 
-export const getCodeString = (code: string) => {
+export const generateCodeString = (code: string) => {
   const codeSplit = code.split('.')
 
   let codeString = ''
@@ -15,15 +15,23 @@ export const getCodeString = (code: string) => {
   return codeString
 }
 
-const incrementLastIndex = (code: string) => {
-  const codeSplit: string[] = code.split('.')
-  const lastIndex: number = codeSplit.length - 1
+const incrementCodeRecursion = (version) => {
+  const parts = version.split('.')
+  const lastPart = parseInt(parts[parts.length - 1])
 
-  const newValue = parseInt(codeSplit[lastIndex]) >= 999 ? `${codeSplit[lastIndex]}.1` : `${parseInt(codeSplit[lastIndex]) + 1}`
-  
-  codeSplit[lastIndex] = newValue
+  if (lastPart < 999) {
+    parts[parts.length - 1] = (lastPart + 1).toString()
+    return parts.join('.')
+  }
 
-  return codeSplit.join('.')
+  if (parts.length === 1) {
+    return '999'
+  }
+
+  const withoutLastPart = parts.slice(0, parts.length - 1).join('.')
+  const incrementedWithoutLastPart = incrementCodeRecursion(withoutLastPart)
+
+  return incrementedWithoutLastPart
 }
 
 export const validateCode = (code: string) => {
@@ -44,13 +52,11 @@ export const validateCode = (code: string) => {
 }
 
 export const incrementCode = (code: string, children: Account | null) => {
-  let newCode = ''
+  const newCode = !children ? code : children.codeUser
 
-  if (!children) {
-    newCode = `${code}.1`
-  } else {
-    newCode = incrementLastIndex(children.codeUser)
-  }
 
-  return newCode
+  const incrementRecursion = incrementCodeRecursion(newCode)
+  const resultCode = incrementRecursion.split('.').filter(item => item !== '0').join('.')
+
+  return resultCode
 }
