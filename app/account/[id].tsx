@@ -29,6 +29,7 @@ export default function AccountDetail() {
   const [errorMessages, setErrorMessages] = React.useState<FormErrorMessage[]>([])
 
   const save = async (account: Account) => {
+
     try {
       if(!account.id) {
         await create({
@@ -66,7 +67,7 @@ export default function AccountDetail() {
     let newValue = ''
 
     if (text.length > 0) {
-      newValue = text.replaceAll(',', '').replaceAll('-', '')
+      newValue = text.replace(/[^0-9.]/g, '')
     }
 
     setCode(newValue)
@@ -99,7 +100,7 @@ export default function AccountDetail() {
   const submitData = async () => {  
     const parentAccount = getStateForKey('parentAccount')
     
-    if(hasErrors())
+    if(await hasErrors())
       return
 
     const accountData: Account = {

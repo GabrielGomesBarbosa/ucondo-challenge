@@ -6,7 +6,7 @@ import { StyleSheet, SafeAreaView, Text, TouchableOpacity } from 'react-native'
 
 import AccountItem from '../src/types/AccountItem'
 import { getAll, remove } from '../src/entities/Account'
-import { SearchInput, AccountList, BodyCard } from '../src/components'
+import { SearchInput, AccountList, BodyCard, DeleteModal } from '../src/components'
 
 export default function AccountPage() {
 
@@ -16,6 +16,15 @@ export default function AccountPage() {
   const [list, setList] = React.useState<AccountItem[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>('')
   const [filteredList, setFilteredList] = React.useState<AccountItem[]>([])
+  const [modalDelete, setModalDelete] = React.useState<{ 
+    open: boolean,
+    itemId: number,
+    itemText: string | null 
+  }>({
+    open: false,
+    itemId: null,
+    itemText: null
+  })
 
   const getAccountList = async () => {
     const list = await getAll()
@@ -27,9 +36,34 @@ export default function AccountPage() {
     router.push('account/null')
   }
 
-  const handleRemove = async ({ id }) => {
-    await remove(id)
-    getAccountList()
+  const handleRemove = async ({ id, code, label }) => {
+    setModalDelete({
+      open: true,
+      itemId: id,
+      itemText: `${code} - ${label}`
+    })
+  }
+
+  const deleteItem = async () => {
+    try {
+      await remove(modalDelete.itemId)
+      await getAccountList()
+      setModalDelete({
+        open: false,
+        itemId: null,
+        itemText: null
+      })
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const handleCloseModal = () => {
+    setModalDelete({
+      open: false,
+      itemId: null,
+      itemText: null
+    })
   }
 
   const handleEdit = async ({ id }) => {
@@ -62,6 +96,7 @@ export default function AccountPage() {
   }, [navigation])
 
   return (
+
     <SafeAreaView style={styles.container}>
       <Stack.Screen 
         options={{
@@ -86,10 +121,17 @@ export default function AccountPage() {
           title='Listagem' 
           list={filteredList} 
           showRelease
-          deleteItem={(value) => handleRemove({ id: value.id })}
+          deleteItem={(value) => handleRemove({ id: value.id, code: value.code, label: value.label })}
           getSelectItem={(value) => handleEdit({ id: value.id })}
         />
       </BodyCard>
+
+      <DeleteModal 
+        visible={modalDelete.open}
+        setVisible={handleCloseModal}
+        itemText={modalDelete.itemText}
+        confirmEvent={deleteItem}
+      />
     </SafeAreaView>
   )
 }

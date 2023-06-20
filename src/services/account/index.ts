@@ -25,8 +25,6 @@ export const validateCode = async (code: string) => {
 
   const item = await getByCode(codeString)
 
-  console.log('item', item)
-
   if (item)
     return {
       error: true,
