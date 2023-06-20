@@ -26,12 +26,15 @@ const DeleteModal = ({ visible, itemText, setVisible, confirmEvent }: DeleteModa
               <Text style={styles.textValue}>{itemText}</Text>
               <Text>?</Text>
             </View>
+            <Text style={styles.textWarning}>Atenção! Ao remover uma conta pai, todas a filhas serão removidas também.</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity 
               onPress={() => setVisible()}
               style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Não!</Text>
+              <Text style={styles.cancelButtonText}>
+                Não!
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => confirmEvent()}
@@ -70,6 +73,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 10
   },
   textValueContainer: {
@@ -100,6 +104,11 @@ const styles = StyleSheet.create({
   },
   confirmButtonText: {
     color: '#fff'
+  },
+  textWarning: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginVertical: 10
   }
 })
 

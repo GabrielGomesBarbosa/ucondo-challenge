@@ -1,10 +1,11 @@
 import { SQLError, SQLResultSet, SQLTransaction } from 'expo-sqlite'
 
-import db from '../services/database/connection'
 import Account from '../types/Account'
 import AccountItem from '../types/AccountItem'
+import db from '../services/database/connection'
 
 db.transaction((transaction: SQLTransaction) => {
+  transaction.executeSql('PRAGMA foreign_keys = ON')
   transaction.executeSql(`
     CREATE TABLE IF NOT EXISTS accounts (
       id INTEGER PRIMARY KEY NOT NULL,
@@ -14,7 +15,7 @@ db.transaction((transaction: SQLTransaction) => {
       codeUser VARCHAR(500) UNIQUE NOT NULL,
       name VARCHAR(100) NOT NULL,
       release INTEGER NOT NULL,
-      FOREIGN KEY (parentId) REFERENCES accounts(id)
+      FOREIGN KEY (parentId) REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `)
 })
