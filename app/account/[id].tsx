@@ -173,10 +173,10 @@ export default function AccountDetail() {
           <View style={styles.formGroup}>
             <Text style={styles.label}>Tipo:</Text>
             {
-              id === null ?  <PickerComponent 
+              id === null ? <PickerComponent 
                 selectedValue={accountType}
                 setValue={handleAccountType}
-                enabled={!!id}
+                enabled={!id}
                 options={[
                   {
                     value: 'Receita',
